@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import productsData from '../../data/products.json'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons'
+import { useCart } from '../CartContext/CartContext'
 
 const categoryNames = {
   pickles: 'Соленья',
@@ -13,8 +14,8 @@ const categoryNames = {
 
 export function ProductDetail () {
   const { category, id } = useParams()
+  const { addToCart } = useCart()
 
-  // Находим товар в конкретной категории
   const product = productsData[category]?.find(item => item.id === parseInt(id))
 
   if (!product) {
@@ -36,9 +37,8 @@ export function ProductDetail () {
     )
   }
 
-  const addToCart = () => {
-    // Логика добавления в корзину
-    console.log('Added to cart:', product.name)
+  const handleAddToCart = () => {
+    addToCart(product, category)
   }
 
   return (
@@ -79,7 +79,7 @@ export function ProductDetail () {
               <p className='text-gray-700 mb-8'>{product.description}</p>
 
               <button
-                onClick={addToCart}
+                onClick={handleAddToCart}
                 className='flex items-center justify-center px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-full font-medium transition-colors w-full'
               >
                 <FontAwesomeIcon icon={faShoppingCart} className='mr-2' />

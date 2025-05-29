@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import productsData from '../../data/products.json'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -9,6 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import { useCart } from '../CartContext/CartContext'
 
 const categoryNames = {
   pickles: 'Соленья',
@@ -19,9 +20,10 @@ const categoryNames = {
 
 export function Catalog () {
   const { category } = useParams()
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = React.useState('')
+  const { addToCart } = useCart()
 
-  useEffect(() => {
+  React.useEffect(() => {
     AOS.init({
       duration: 800,
       easing: 'ease-in-out',
@@ -35,13 +37,13 @@ export function Catalog () {
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const addToCart = product => {
+  const handleAddToCart = product => {
+    addToCart(product, category)
     const button = document.getElementById(`add-to-cart-${product.id}`)
     if (button) {
       button.classList.add('animate-ping')
       setTimeout(() => button.classList.remove('animate-ping'), 500)
     }
-    console.log('Added to cart:', product.name)
   }
 
   return (
@@ -133,7 +135,7 @@ export function Catalog () {
                       </Link>
                       <button
                         id={`add-to-cart-${product.id}`}
-                        onClick={() => addToCart(product)}
+                        onClick={() => handleAddToCart(product)}
                         className='px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-full text-sm transition-colors duration-300'
                       >
                         В корзину

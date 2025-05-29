@@ -1,9 +1,21 @@
-import React, { createContext, useState, useContext } from 'react'
+import React, { createContext, useState, useContext, useEffect } from 'react'
 
 const CartContext = createContext()
 
 export function CartProvider ({ children }) {
-  const [cartItems, setCartItems] = useState([])
+  const [cartItems, setCartItems] = useState(() => {
+    // Загрузка корзины из localStorage при инициализации
+    if (typeof window !== 'undefined') {
+      const savedCart = localStorage.getItem('cartItems')
+      return savedCart ? JSON.parse(savedCart) : []
+    }
+    return []
+  })
+
+  // Сохранение корзины в localStorage при изменении
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems))
+  }, [cartItems])
 
   const addToCart = (product, category) => {
     setCartItems(prevItems => {
@@ -28,7 +40,7 @@ export function CartProvider ({ children }) {
       prevItems.filter(
         item => !(item.id === productId && item.category === category)
       )
-    ) // ← ЦЯ ДУЖКА БУЛА ВІДСУТНЯ
+    )
   }
 
   const updateQuantity = (productId, category, newQuantity) => {
@@ -46,8 +58,12 @@ export function CartProvider ({ children }) {
     )
   }
 
+  const clearCart = () => {
+    setCartItems([])
+  }
+
   const totalPrice = cartItems.reduce((sum, item) => {
-    const price = parseFloat(item.price.replace(' грн', ''))
+    const price = parseFloat(item.price.replace(' грн', '').replace(',', '.'))
     return sum + price * item.quantity
   }, 0)
 
@@ -58,6 +74,7 @@ export function CartProvider ({ children }) {
         addToCart,
         removeFromCart,
         updateQuantity,
+        clearCart,
         totalPrice,
         cartCount: cartItems.reduce((sum, item) => sum + item.quantity, 0)
       }}
