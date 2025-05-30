@@ -39,10 +39,10 @@ export function Ingredients () {
               data-aos='fade-right'
               data-aos-delay='300'
             >
-              Мука, вода, морская соль и закваска: четыре простых ингредиента,
-              которые — при смешивании, формовании, ферментации и выпечке —
-              составляют один из самых основных продуктов, которыми люди
-              питались на протяжении тысячелетий...
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit
+              ratione dolore unde, esse iure dolor ex. Fugit tempora sint esse.
+              Optio, hic iure! Sunt magni suscipit laboriosam ullam accusamus
+              distinctio!
             </p>
             <Link
               to='/ingredients'

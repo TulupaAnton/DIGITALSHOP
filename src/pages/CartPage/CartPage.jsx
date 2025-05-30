@@ -40,7 +40,7 @@ export function CartPage () {
                 Ваша корзина пуста
               </h2>
               <Link
-                to='/catalog/pickles'
+                to='/All'
                 className='inline-block px-6 py-3 bg-amber-500 text-white rounded-full hover:bg-amber-600 transition-colors'
               >
                 Начать покупки

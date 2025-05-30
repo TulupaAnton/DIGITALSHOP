@@ -96,9 +96,7 @@ export function Home () {
       </div>
 
       {/* Секция с сортами хлеба */}
-      <div>
-        <Description />
-      </div>
+      <div>{/* <Description /> */}</div>
 
       {/* Секция с контактами */}
 

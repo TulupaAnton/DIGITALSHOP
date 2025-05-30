@@ -56,8 +56,8 @@ export function Catalog () {
             </h1>
             <p className='text-gray-600 mt-2'>
               {categoryNames[category]
-                ? `Все товары из категории "${categoryNames[category]}"`
-                : 'Продукты, приготовленные с любовью'}
+                ? `Усі товари з категорії "${categoryNames[category]}"`
+                : "Продукти приготовлені з любов'ю та турботою"}
             </p>
           </div>
 
@@ -149,10 +149,10 @@ export function Catalog () {
         ) : (
           <div className='text-center py-12' data-aos='fade-up'>
             <h3 className='text-xl font-medium text-gray-700'>
-              Товары не найдены
+              Товари не знайдені
             </h3>
             <p className='text-gray-500 mt-2'>
-              Попробуйте изменить параметры поиска
+              Спробуйте змінити критерії пошуку або вибрати іншу категорію.
             </p>
           </div>
         )}

@@ -11,6 +11,7 @@ import { CartPage } from './pages/CartPage/CartPage'
 import { CartProvider } from './pages/CartContext/CartContext'
 import { Catalog } from './pages/Catalog/Catalog'
 import { Payment } from './pages/Payment/Payment'
+import { All } from './pages/Catalog/All'
 
 function App () {
   return (
@@ -20,6 +21,7 @@ function App () {
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
         <Route path='/contact' element={<Contact />} />
+        <Route path='/All' element={<All />} />
         <Route path='/catalog/:category' element={<Catalog />} />
         <Route path='/ingredients' element={<Ingredients />} />
         <Route path='/product/:category/:id' element={<ProductDetail />} />

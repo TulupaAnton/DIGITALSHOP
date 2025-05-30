@@ -10,7 +10,7 @@ export function Header () {
 
   const navLinks = [
     { name: 'Головна', path: '/' },
-    { name: 'Каталог', path: '/catalog/pickles' },
+    { name: 'Каталог', path: '/All' },
     { name: 'Про нас', path: '/about' },
     { name: 'Контакти', path: '/contact' }
   ]
