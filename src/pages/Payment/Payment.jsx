@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 import { useCart } from '../CartContext/CartContext'
 import { motion } from 'framer-motion'
+import zaglushka from '../../assets/zaglushka.png'
 
 export function Payment () {
   const { cartItems, totalPrice, cartCount, clearCart } = useCart()
@@ -63,13 +64,17 @@ export function Payment () {
                     className='p-4'
                   >
                     <div className='flex items-center'>
-                      <div className='flex-shrink-0 mr-4'>
+                      <div className='flex-shrink-0 mr-4 w-16 h-16'>
                         <img
-                          src={`/images/${item.category}/${item.id}.jpg`}
+                          src={
+                            item.image
+                              ? `../../assets/${item.image}`
+                              : zaglushka
+                          }
                           alt={item.name}
-                          className='w-16 h-16 object-cover rounded-lg'
+                          className='w-full h-full object-cover rounded-lg'
                           onError={e => {
-                            e.target.src = '/images/placeholder.jpg'
+                            e.target.src = zaglushka
                           }}
                         />
                       </div>

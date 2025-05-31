@@ -2,7 +2,7 @@ import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 import { Header } from './components/Header/Header'
 import { Home } from './pages/Home/Home'
 import { About } from './pages/About/About'
-import { Contact } from './pages/Contact/Contact'
+import { Contacts } from './pages/Contact/Contact'
 
 import { Ingredients } from './pages/Ingredients/ingredients'
 
@@ -20,7 +20,7 @@ function App () {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
-        <Route path='/contact' element={<Contact />} />
+        <Route path='/contact' element={<Contacts />} />
         <Route path='/All' element={<All />} />
         <Route path='/catalog/:category' element={<Catalog />} />
         <Route path='/ingredients' element={<Ingredients />} />

@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import zaglushka from '../../assets/zaglushka.png'
 
 export function Ingredients () {
   useEffect(() => {
@@ -66,7 +67,7 @@ export function Ingredients () {
         >
           <div className='relative rounded-2xl overflow-hidden shadow-2xl'>
             <img
-              src={breadImage}
+              src={zaglushka}
               alt='Хлеб и ингредиенты'
               className='w-full h-auto object-cover transition-transform duration-1000 hover:scale-105'
               style={{ minHeight: '500px' }}

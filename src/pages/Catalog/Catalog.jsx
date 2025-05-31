@@ -10,6 +10,7 @@ import {
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { useCart } from '../CartContext/CartContext'
+import zaglushka from '../../assets/zaglushka.png'
 
 const categoryNames = {
   pickles: 'Соленья',
@@ -41,80 +42,112 @@ export function Catalog () {
     addToCart(product, category)
     const button = document.getElementById(`add-to-cart-${product.id}`)
     if (button) {
-      button.classList.add('animate-ping')
-      setTimeout(() => button.classList.remove('animate-ping'), 500)
+      button.classList.add('animate-pulse')
+      setTimeout(() => button.classList.remove('animate-pulse'), 500)
     }
   }
 
   return (
-    <div className='py-12 bg-gradient-to-b from-amber-50 to-white'>
-      <div className='container mx-auto px-4'>
-        <div className='flex flex-col md:flex-row justify-between items-center mb-12'>
+    <div className='py-12 bg-gradient-to-b from-amber-50 to-white min-h-screen'>
+      <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
+        <div className='flex flex-col md:flex-row justify-between items-center mb-12 gap-6'>
           <div className='mb-6 md:mb-0' data-aos='fade-right'>
-            <h1 className='text-4xl font-bold text-gray-800'>
+            <h1 className='text-4xl font-bold text-gray-900 bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent'>
               {categoryNames[category] || 'Каталог'}
             </h1>
-            <p className='text-gray-600 mt-2'>
+            <p className='text-gray-600 mt-2 max-w-lg'>
               {categoryNames[category]
                 ? `Усі товари з категорії "${categoryNames[category]}"`
                 : "Продукти приготовлені з любов'ю та турботою"}
             </p>
           </div>
 
-          <div className='relative w-full md:w-64' data-aos='fade-left'>
-            <FontAwesomeIcon
-              icon={faSearch}
-              className='absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-500'
-            />
-            <input
-              type='text'
-              placeholder='Поиск продуктов...'
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              className='w-full pl-10 pr-4 py-2 rounded-full bg-white border border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-300'
-            />
+          <div className='flex flex-col md:flex-row items-center gap-4 w-full md:w-auto'>
+            <div className='relative w-full md:w-72' data-aos='fade-left'>
+              <div className='relative'>
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  className='absolute left-4 top-1/2 transform -translate-y-1/2 text-amber-500'
+                />
+                <input
+                  type='text'
+                  placeholder='Поиск продуктов...'
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                  className='w-full pl-12 pr-10 py-3 rounded-2xl bg-white border border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent shadow-sm transition-all duration-200'
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm('')}
+                    className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-amber-600 transition-colors'
+                  ></button>
+                )}
+              </div>
+            </div>
+
+            <div
+              className='w-full md:w-auto'
+              data-aos='fade-up'
+              data-aos-delay='150'
+            >
+              <Link
+                to='/All'
+                className='group inline-flex items-center px-5 py-3 bg-white border border-amber-300 rounded-xl text-amber-600 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-400 transition-all duration-200 shadow-sm hover:shadow-md'
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRight}
+                  className='mr-2 transform -rotate-180 transition-transform duration-200 group-hover:translate-x-1'
+                />
+                Повернутись до каталогу
+              </Link>
+            </div>
           </div>
         </div>
 
         {filteredProducts.length > 0 ? (
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
             {filteredProducts.map((product, i) => (
               <div
                 key={`${category}-${product.id}`}
-                className='group bg-white rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-2'
+                className='group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1'
                 data-aos='fade-up'
                 data-aos-delay={i * 50}
               >
-                <div className='relative overflow-hidden h-60'>
+                <div className='relative overflow-hidden h-64'>
+                  <div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10'></div>
                   <img
-                    src={`/images/${category}/${product.id}.jpg`}
+                    src={
+                      product.image
+                        ? `../../assets/${product.image}`
+                        : zaglushka
+                    }
                     alt={product.name}
                     className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105'
                     onError={e => {
-                      e.target.src = '/images/placeholder.jpg'
+                      e.target.src = zaglushka
                     }}
                   />
-                  <div className='absolute top-4 right-4 flex space-x-2'>
-                    <button className='w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-md hover:bg-amber-100 transition-colors'>
+                  <div className='absolute top-4 right-4 flex space-x-2 z-20'>
+                    <button className='w-10 h-10 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-xl shadow-sm hover:bg-amber-100 transition-all duration-200 group/wishlist'>
                       <FontAwesomeIcon
                         icon={faHeart}
-                        className='text-gray-400 hover:text-amber-500'
+                        className='text-gray-500 group-hover/wishlist:text-amber-500 transition-colors'
                       />
                     </button>
                   </div>
                 </div>
 
-                <div className='p-6'>
-                  <div className='flex justify-between items-start mb-2'>
-                    <h3 className='font-semibold text-lg text-gray-800'>
+                <div className='p-5'>
+                  <div className='flex justify-between items-start mb-3'>
+                    <h3 className='font-semibold text-lg text-gray-900 line-clamp-1'>
                       {product.name}
                     </h3>
-                    <span className='font-bold text-amber-600'>
+                    <span className='font-bold text-amber-600 whitespace-nowrap ml-2'>
                       {product.price}
                     </span>
                   </div>
 
-                  <p className='text-gray-600 text-sm mb-6 line-clamp-2'>
+                  <p className='text-gray-600 text-sm mb-5 line-clamp-2'>
                     {product.description}
                   </p>
 
@@ -125,18 +158,18 @@ export function Catalog () {
                     <div className='flex space-x-2'>
                       <Link
                         to={`/product/${category}/${product.id}`}
-                        className='px-4 py-2 border border-amber-500 text-amber-600 hover:bg-amber-50 rounded-full text-sm transition-colors duration-300 flex items-center group'
+                        className='px-4 py-2 border border-amber-400 text-amber-600 hover:bg-amber-50 rounded-xl text-sm transition-all duration-200 flex items-center group/readmore'
                       >
                         Детальніше
                         <FontAwesomeIcon
                           icon={faArrowRight}
-                          className='ml-2 text-xs transition-transform group-hover:translate-x-1'
+                          className='ml-2 text-xs transition-transform duration-200 group-hover/readmore:translate-x-1'
                         />
                       </Link>
                       <button
                         id={`add-to-cart-${product.id}`}
                         onClick={() => handleAddToCart(product)}
-                        className='px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-full text-sm transition-colors duration-300'
+                        className='px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-sm transition-all duration-200 shadow-md hover:shadow-lg'
                       >
                         В корзину
                       </button>
@@ -147,13 +180,27 @@ export function Catalog () {
             ))}
           </div>
         ) : (
-          <div className='text-center py-12' data-aos='fade-up'>
-            <h3 className='text-xl font-medium text-gray-700'>
-              Товари не знайдені
-            </h3>
-            <p className='text-gray-500 mt-2'>
-              Спробуйте змінити критерії пошуку або вибрати іншу категорію.
-            </p>
+          <div className='text-center py-16' data-aos='fade-up'>
+            <div className='max-w-md mx-auto'>
+              <div className='w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6'>
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  className='text-amber-500 text-3xl'
+                />
+              </div>
+              <h3 className='text-2xl font-medium text-gray-800 mb-2'>
+                Товари не знайдені
+              </h3>
+              <p className='text-gray-500 mb-6'>
+                Спробуйте змінити критерії пошуку або вибрати іншу категорію.
+              </p>
+              <button
+                onClick={() => setSearchTerm('')}
+                className='px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg'
+              >
+                Скинути пошук
+              </button>
+            </div>
           </div>
         )}
       </div>

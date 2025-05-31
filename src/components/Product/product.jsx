@@ -1,37 +1,37 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import rekaImage from '../../assets/reka.jpg'
-
+import zaglushka from '../../assets/zaglushka.png'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import { motion } from 'framer-motion'
 
 const categories = [
   {
     id: 'pickles',
     name: 'Соленья',
     description: 'Традиционные русские соленья и маринады',
-    image: '/images/pickles/category.jpg',
+    image: zaglushka,
     catalogLink: '/catalog/pickles'
   },
   {
     id: 'smoked',
     name: 'Копчености',
     description: 'Мясные и рыбные копчености холодного копчения',
-    image: '/images/smoked/category.jpg',
+    image: zaglushka,
     catalogLink: '/catalog/smoked'
   },
   {
     id: 'salads',
     name: 'Салаты',
     description: 'Готовые салаты по традиционным рецептам',
-    image: '/images/salads/category.jpg',
+    image: zaglushka,
     catalogLink: '/catalog/salads'
   },
   {
     id: 'semi-finished',
     name: 'Полуфабрикаты',
     description: 'Домашние пельмени, вареники и другие полуфабрикаты',
-    image: '/images/semi-finished/category.jpg',
+    image: zaglushka,
     catalogLink: '/catalog/semi-finished'
   }
 ]
@@ -49,56 +49,78 @@ export function Product () {
   return (
     <div
       className='min-h-[35rem] bg-cover bg-center bg-no-repeat bg-fixed relative py-20 overflow-hidden'
-      style={{ backgroundImage: `url(${rekaImage})` }}
+      style={{ backgroundImage: `url(${zaglushka})` }}
     >
+      {/* Параллакс-эффект и наложения */}
       <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-black/30'></div>
       <div className='absolute inset-0 bg-noise opacity-10'></div>
 
-      <div className='relative z-10 container mx-auto px-4'>
-        <h2
-          className='text-4xl font-bold text-white text-center mb-12'
-          data-aos='fade-down'
-          data-aos-delay='100'
-        >
-          <span className='bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-white'>
-            Наши категории
-          </span>
-        </h2>
+      {/* Декоративные элементы */}
+      <div className='absolute top-1/4 left-10 w-32 h-32 bg-amber-400 rounded-full mix-blend-overlay opacity-20 filter blur-xl'></div>
+      <div className='absolute bottom-1/3 right-20 w-40 h-40 bg-amber-500 rounded-full mix-blend-overlay opacity-15 filter blur-xl'></div>
 
-        <div
-          className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'
-          data-aos='fade-up'
-          data-aos-delay='200'
+      <div className='relative z-10 container mx-auto px-4'>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className='text-center mb-16'
         >
+          <h2 className='text-4xl md:text-5xl font-bold text-white mb-6'>
+            <span className='bg-clip-text text-transparent bg-gradient-to-r from-amber-300 to-amber-100 drop-shadow-lg'>
+              Наши категории
+            </span>
+          </h2>
+          <div className='w-24 h-1 bg-amber-400 mx-auto rounded-full'></div>
+        </motion.div>
+
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8'>
           {categories.map((category, i) => (
-            <div
+            <motion.div
               key={category.id}
-              className='group bg-white/90 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2'
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: i * 0.1 }}
+              viewport={{ once: true }}
+              className='group'
               data-aos='zoom-in'
               data-aos-delay={200 + i * 100}
             >
-              <div className='overflow-hidden'>
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className='w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110'
-                />
+              <div className='bg-white/90 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 h-full flex flex-col border border-white/20'>
+                <div className='relative overflow-hidden h-48'>
+                  <motion.img
+                    src={category.image}
+                    alt={category.name}
+                    className='w-full h-full object-cover'
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.5 }}
+                  />
+                  <div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent'></div>
+                </div>
+
+                <div className='p-6 flex flex-col flex-grow'>
+                  <h3 className='text-xl font-bold text-gray-800 mb-3 text-center'>
+                    {category.name}
+                  </h3>
+                  <p className='text-gray-600 mb-6 text-center flex-grow'>
+                    {category.description}
+                  </p>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className='mt-auto'
+                  >
+                    <Link
+                      to={category.catalogLink}
+                      className='block w-full max-w-xs mx-auto text-center bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white py-3 px-6 rounded-full transition-all duration-300 shadow-md hover:shadow-lg'
+                    >
+                      В каталог
+                    </Link>
+                  </motion.div>
+                </div>
               </div>
-              <div className='p-6 flex flex-col h-[250px]'>
-                <h3 className='font-semibold text-xl text-center mb-3 text-gray-800'>
-                  {category.name}
-                </h3>
-                <p className='text-gray-600 mb-6 text-center flex-grow'>
-                  {category.description}
-                </p>
-                <Link
-                  to={category.catalogLink}
-                  className='mt-auto mx-auto text-center bg-amber-500 hover:bg-amber-600 text-white py-3 px-6 rounded-full transition-all duration-300 hover:shadow-md'
-                >
-                  В каталог
-                </Link>
-              </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

@@ -1,8 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import {
+  faTrash,
+  faArrowLeft,
+  faShoppingBag
+} from '@fortawesome/free-solid-svg-icons'
 import { useCart } from '../CartContext/CartContext'
+import zaglushka from '../../assets/zaglushka.png'
+import { motion } from 'framer-motion'
 
 export function CartPage () {
   const {
@@ -20,115 +26,209 @@ export function CartPage () {
     clearCart()
   }
 
-  return (
-    <div className='min-h-screen bg-gradient-to-b from-amber-50 to-white py-12'>
-      <div className='container mx-auto px-4'>
-        <div className='max-w-4xl mx-auto'>
-          {/* <Link
-            to='/'
-            className='inline-flex items-center text-amber-600 hover:underline mb-8'
-          >
-            <FontAwesomeIcon icon={faArrowLeft} className='mr-2' />
-            Вернуться к покупкам
-          </Link> */}
+  // Анимации
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  }
 
-          <h1 className='text-3xl font-bold text-gray-800 mb-8'>Корзина</h1>
+  const itemAnimation = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+  }
+
+  return (
+    <div className='min-h-screen bg-gradient-to-b from-amber-50 to-amber-100 py-12'>
+      <div className='container mx-auto px-4'>
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className='max-w-4xl mx-auto'
+        >
+          <div className='flex items-center mb-8'>
+            <div className='bg-amber-500 p-3 rounded-full mr-4'>
+              <FontAwesomeIcon
+                icon={faShoppingBag}
+                className='text-white text-xl'
+              />
+            </div>
+            <h1 className='text-3xl font-bold text-gray-800'>Ваша корзина</h1>
+            {cartCount > 0 && (
+              <span className='ml-3 bg-amber-500 text-white text-sm font-bold px-3 py-1 rounded-full'>
+                {cartCount}{' '}
+                {cartCount === 1
+                  ? 'товар'
+                  : cartCount < 5
+                  ? 'товара'
+                  : 'товаров'}
+              </span>
+            )}
+          </div>
 
           {cartCount === 0 ? (
-            <div className='text-center py-12'>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className='text-center py-12 bg-white rounded-xl shadow-sm'
+            >
+              <div className='mx-auto w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center mb-6'>
+                <FontAwesomeIcon
+                  icon={faShoppingBag}
+                  className='text-amber-500 text-3xl'
+                />
+              </div>
               <h2 className='text-xl font-medium text-gray-700 mb-4'>
                 Ваша корзина пуста
               </h2>
+              <p className='text-gray-500 mb-6 max-w-md mx-auto'>
+                Добавьте товары из нашего каталога, чтобы продолжить покупки
+              </p>
               <Link
                 to='/All'
-                className='inline-block px-6 py-3 bg-amber-500 text-white rounded-full hover:bg-amber-600 transition-colors'
+                className='inline-block px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium rounded-full transition-all shadow-md hover:shadow-lg'
               >
-                Начать покупки
+                Перейти в каталог
               </Link>
-            </div>
+            </motion.div>
           ) : (
-            <div className='bg-white rounded-xl shadow-lg overflow-hidden'>
-              <div className='divide-y divide-gray-200'>
-                {cartItems.map(item => (
-                  <div key={`${item.category}-${item.id}`} className='p-6'>
-                    <div className='flex flex-col md:flex-row md:items-center'>
-                      <div className='flex-shrink-0 mb-4 md:mb-0 md:mr-6'>
-                        <img
-                          src={`/images/${item.category}/${item.id}.jpg`}
-                          alt={item.name}
-                          className='w-24 h-24 object-cover rounded-lg'
-                          onError={e => {
-                            e.target.src = '/images/placeholder.jpg'
-                          }}
-                        />
-                      </div>
-                      <div className='flex-grow'>
-                        <div className='flex justify-between'>
-                          <h3 className='text-lg font-semibold text-gray-800'>
+            <motion.div
+              variants={container}
+              initial='hidden'
+              animate='show'
+              className='bg-white rounded-xl shadow-lg overflow-hidden divide-y divide-amber-100'
+            >
+              {cartItems.map(item => (
+                <motion.div
+                  key={`${item.category}-${item.id}`}
+                  variants={itemAnimation}
+                  className='p-6 hover:bg-amber-50 transition-colors duration-200'
+                >
+                  <div className='flex flex-col md:flex-row md:items-center'>
+                    <div className='flex-shrink-0 mb-4 md:mb-0 md:mr-6 w-24 h-24 relative'>
+                      <motion.img
+                        src={
+                          item.image ? `../../assets/${item.image}` : zaglushka
+                        }
+                        alt={item.name}
+                        className='w-full h-full object-cover rounded-lg shadow-sm'
+                        onError={e => {
+                          e.target.src = zaglushka
+                        }}
+                        whileHover={{ scale: 1.05 }}
+                        transition={{
+                          type: 'spring',
+                          stiffness: 400,
+                          damping: 10
+                        }}
+                      />
+                      <motion.button
+                        onClick={() => removeFromCart(item.id, item.category)}
+                        className='absolute -top-2 -right-2 bg-white rounded-full p-2 shadow-md hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors'
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <FontAwesomeIcon icon={faTrash} className='text-xs' />
+                      </motion.button>
+                    </div>
+                    <div className='flex-grow'>
+                      <div className='flex justify-between items-start'>
+                        <div>
+                          <h3 className='text-lg font-semibold text-gray-800 mb-1'>
                             {item.name}
                           </h3>
-                          <button
-                            onClick={() =>
-                              removeFromCart(item.id, item.category)
-                            }
-                            className='text-gray-400 hover:text-red-500 transition-colors'
-                          >
-                            <FontAwesomeIcon icon={faTrash} />
-                          </button>
+                          <p className='text-amber-600 font-medium'>
+                            {item.price}
+                          </p>
                         </div>
-                        <p className='text-gray-600 mb-2'>{item.price}</p>
-                        <div className='flex items-center mt-4'>
-                          <button
-                            onClick={() =>
-                              updateQuantity(
-                                item.id,
-                                item.category,
-                                item.quantity - 1
-                              )
-                            }
-                            className='w-8 h-8 flex items-center justify-center border border-gray-300 rounded-l-md hover:bg-gray-100'
-                          >
-                            -
-                          </button>
-                          <span className='w-12 h-8 flex items-center justify-center border-t border-b border-gray-300'>
-                            {item.quantity}
-                          </span>
-                          <button
-                            onClick={() =>
-                              updateQuantity(
-                                item.id,
-                                item.category,
-                                item.quantity + 1
-                              )
-                            }
-                            className='w-8 h-8 flex items-center justify-center border border-gray-300 rounded-r-md hover:bg-gray-100'
-                          >
-                            +
-                          </button>
-                        </div>
+                      </div>
+
+                      <div className='flex items-center mt-4'>
+                        <motion.button
+                          onClick={() =>
+                            updateQuantity(
+                              item.id,
+                              item.category,
+                              item.quantity - 1
+                            )
+                          }
+                          className='w-8 h-8 flex items-center justify-center border border-gray-300 rounded-l-md hover:bg-gray-100 disabled:opacity-50'
+                          disabled={item.quantity <= 1}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          -
+                        </motion.button>
+                        <span className='w-12 h-8 flex items-center justify-center border-t border-b border-gray-300 bg-gray-50'>
+                          {item.quantity}
+                        </span>
+                        <motion.button
+                          onClick={() =>
+                            updateQuantity(
+                              item.id,
+                              item.category,
+                              item.quantity + 1
+                            )
+                          }
+                          className='w-8 h-8 flex items-center justify-center border border-gray-300 rounded-r-md hover:bg-gray-100'
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          +
+                        </motion.button>
+                        <span className='ml-auto font-medium text-gray-700'>
+                          {(
+                            parseFloat(
+                              item.price.replace(' грн', '').replace(',', '.')
+                            ) * item.quantity
+                          ).toFixed(2)}{' '}
+                          грн
+                        </span>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </motion.div>
+              ))}
 
-              <div className='p-6 bg-gray-50'>
+              <div className='p-6 bg-gradient-to-r from-amber-50 to-amber-100'>
                 <div className='flex justify-between items-center mb-6'>
-                  <span className='text-lg font-semibold'>Итого:</span>
-                  <span className='text-xl font-bold text-amber-600'>
+                  <span className='text-lg font-semibold text-gray-800'>
+                    Итого:
+                  </span>
+                  <span className='text-2xl font-bold text-amber-600'>
                     {totalPrice.toFixed(2)} грн
                   </span>
                 </div>
-                <Link
-                  to='/payment'
-                  className='w-full py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium transition-colors'
-                >
-                  Оформить заказ
-                </Link>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                  <motion.button
+                    onClick={clearCart}
+                    className='w-full py-3 border-2 border-red-500 text-red-500 hover:bg-red-50 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2'
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                    <span>Очистить корзину</span>
+                  </motion.button>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Link
+                      to='/payment'
+                      className='block w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium rounded-lg transition-all text-center shadow-md hover:shadow-lg'
+                    >
+                      Оформить заказ
+                    </Link>
+                  </motion.div>
+                </div>
               </div>
-            </div>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   )
