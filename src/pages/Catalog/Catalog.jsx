@@ -19,7 +19,24 @@ const categoryNames = {
   salads: 'Салаты',
   'semi-finished': 'Полуфабрикаты'
 }
+const truncateDescription = (text, maxLength = 80) => {
+  if (text.length <= maxLength) return text
 
+  // Обрезаем до maxLength и ищем последнюю точку/запятую/пробел
+  let truncated = text.substr(0, maxLength)
+  const lastPunctuation = Math.max(
+    truncated.lastIndexOf('. '),
+    truncated.lastIndexOf(', '),
+    truncated.lastIndexOf('; '),
+    truncated.lastIndexOf(' ')
+  )
+
+  if (lastPunctuation > 0) {
+    truncated = truncated.substr(0, lastPunctuation)
+  }
+
+  return truncated + '...'
+}
 export function Catalog () {
   const { category } = useParams()
   const [searchTerm, setSearchTerm] = React.useState('')
@@ -141,7 +158,7 @@ export function Catalog () {
 
                 <div className='p-5'>
                   <div className='flex justify-between items-start mb-3'>
-                    <h3 className='font-semibold text-lg text-gray-900 line-clamp-1'>
+                    <h3 className='font-semibold text-sm md:text-base text-gray-900 line-clamp-1'>
                       {product.name}
                     </h3>
                     <span className='font-bold text-amber-600 whitespace-nowrap ml-2'>
@@ -150,7 +167,7 @@ export function Catalog () {
                   </div>
 
                   <p className='text-gray-600 text-sm mb-5 line-clamp-2'>
-                    {product.description}
+                    {truncateDescription(product.description, 80)}
                   </p>
 
                   <div className='flex justify-between items-center'>

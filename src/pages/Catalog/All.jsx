@@ -22,7 +22,24 @@ const categoryNames = {
   salads: 'Салаты',
   'semi-finished': 'Полуфабрикаты'
 }
+const truncateDescription = (text, maxLength = 80) => {
+  if (text.length <= maxLength) return text
 
+  // Обрезаем до maxLength и ищем последнюю точку/запятую/пробел
+  let truncated = text.substr(0, maxLength)
+  const lastPunctuation = Math.max(
+    truncated.lastIndexOf('. '),
+    truncated.lastIndexOf(', '),
+    truncated.lastIndexOf('; '),
+    truncated.lastIndexOf(' ')
+  )
+
+  if (lastPunctuation > 0) {
+    truncated = truncated.substr(0, lastPunctuation)
+  }
+
+  return truncated + '...'
+}
 const categoryFilters = [
   { id: 'all', name: 'Все товары' },
   { id: 'pickles', name: 'Соленья' },
@@ -219,9 +236,8 @@ export function All () {
                       {product.price}
                     </span>
                   </div>
-
                   <p className='text-gray-600 text-xs md:text-sm mb-3 md:mb-4 line-clamp-2'>
-                    {product.description}
+                    {truncateDescription(product.description, 80)}
                   </p>
 
                   <div className='flex justify-between items-center'>
