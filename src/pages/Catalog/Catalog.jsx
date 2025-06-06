@@ -9,8 +9,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
-import { useCart } from '../CartContext/CartContext'
+
 import zaglushka from '../../assets/zaglushka.png'
+import { useCartStore } from '../../store/cartStore'
 
 const categoryNames = {
   pickles: 'Соленья',
@@ -22,7 +23,7 @@ const categoryNames = {
 export function Catalog () {
   const { category } = useParams()
   const [searchTerm, setSearchTerm] = React.useState('')
-  const { addToCart } = useCart()
+  const { addToCart } = useCartStore()
 
   React.useEffect(() => {
     AOS.init({
@@ -31,7 +32,16 @@ export function Catalog () {
       once: false
     })
   }, [])
+  const handleFavoriteClick = (product, e) => {
+    e.preventDefault()
+    e.stopPropagation()
 
+    if (isFavorite(product.id, product.category)) {
+      removeFromFavorites(product.id, product.category)
+    } else {
+      addToFavorites(product)
+    }
+  }
   const categoryProducts = productsData[category] || []
 
   const filteredProducts = categoryProducts.filter(product =>
@@ -127,14 +137,6 @@ export function Catalog () {
                       e.target.src = zaglushka
                     }}
                   />
-                  <div className='absolute top-4 right-4 flex space-x-2 z-20'>
-                    <button className='w-10 h-10 flex items-center justify-center bg-white/90 backdrop-blur-sm rounded-xl shadow-sm hover:bg-amber-100 transition-all duration-200 group/wishlist'>
-                      <FontAwesomeIcon
-                        icon={faHeart}
-                        className='text-gray-500 group-hover/wishlist:text-amber-500 transition-colors'
-                      />
-                    </button>
-                  </div>
                 </div>
 
                 <div className='p-5'>

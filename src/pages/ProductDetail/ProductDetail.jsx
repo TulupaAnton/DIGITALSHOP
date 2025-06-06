@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom'
 import productsData from '../../data/products.json'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons'
-import { useCart } from '../CartContext/CartContext'
 
 const categoryNames = {
   pickles: 'Соленья',
@@ -11,10 +10,10 @@ const categoryNames = {
   salads: 'Салаты',
   'semi-finished': 'Полуфабрикаты'
 }
-
+import { useCartStore } from '../../store/cartStore'
 export function ProductDetail () {
   const { category, id } = useParams()
-  const { addToCart } = useCart()
+  const addToCart = useCartStore(state => state.addToCart)
 
   const product = productsData[category]?.find(item => item.id === parseInt(id))
 

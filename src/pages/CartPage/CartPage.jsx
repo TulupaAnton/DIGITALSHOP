@@ -6,20 +6,15 @@ import {
   faArrowLeft,
   faShoppingBag
 } from '@fortawesome/free-solid-svg-icons'
-import { useCart } from '../CartContext/CartContext'
+import { useCartStore } from '../../store/cartStore'
 import zaglushka from '../../assets/zaglushka.png'
 import { motion } from 'framer-motion'
 
 export function CartPage () {
-  const {
-    cartItems,
-    removeFromCart,
-    updateQuantity,
-    totalPrice,
-    cartCount,
-    clearCart
-  } = useCart()
-
+  const { cartItems, removeFromCart, updateQuantity, clearCart } =
+    useCartStore()
+  const totalPrice = useCartStore(state => state.totalPrice())
+  const cartCount = useCartStore(state => state.cartCount())
   const handleCheckout = () => {
     // Здесь можно добавить логику оформления заказа
     alert('Заказ оформлен! Спасибо за покупку!')

@@ -8,13 +8,14 @@ import {
   FaHome,
   FaBoxes,
   FaInfoCircle,
-  FaPhone
+  FaPhone,
+  FaHeart
 } from 'react-icons/fa'
-import { useCart } from '../../pages/CartContext/CartContext'
+import { useCartStore } from '../../store/cartStore'
 
 export function Header () {
   const [isOpen, setIsOpen] = useState(false)
-  const { cartCount } = useCart()
+  const cartCount = useCartStore(state => state.cartCount())
 
   const navLinks = [
     { name: 'Головна', path: '/', icon: <FaHome className='mr-2' /> },
@@ -27,23 +28,40 @@ export function Header () {
     { name: 'Контакти', path: '/contact', icon: <FaPhone className='mr-2' /> }
   ]
 
+  const menuVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: { opacity: 1, x: 0 }
+  }
+
   return (
-    <header className='bg-gradient-to-b from-amber-800 to-amber-900 shadow-lg sticky top-0 z-50'>
+    <header className='bg-gradient-to-b from-amber-800 to-amber-900 shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-90'>
       <div className='container mx-auto px-4 py-3'>
         <div className='flex justify-between items-center'>
-          {/* Logo */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             className='flex items-center space-x-8'
           >
             <Link to='/' className='flex items-center'>
               <motion.span
                 whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 className='text-2xl font-bold text-white flex items-center'
               >
-                <span className='bg-amber-600 p-2 rounded-lg mr-3'>
+                <span className='bg-amber-600 p-2 rounded-lg mr-3 shadow-md'>
                   <FaShoppingCart className='text-amber-100' />
                 </span>
                 <span className='bg-gradient-to-r from-amber-300 to-amber-100 bg-clip-text text-transparent'>
@@ -52,7 +70,6 @@ export function Header () {
               </motion.span>
             </Link>
 
-            {/* Desktop Navigation */}
             <nav className='hidden md:flex items-center space-x-1'>
               {navLinks.map((link, index) => (
                 <motion.div
@@ -61,6 +78,7 @@ export function Header () {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * index }}
                   whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <Link
                     to={link.path}
@@ -75,9 +93,13 @@ export function Header () {
             </nav>
           </motion.div>
 
-          {/* Cart and Mobile menu */}
           <div className='flex items-center space-x-4'>
-            {/* Cart Icon */}
+            <motion.div
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className='relative'
+            ></motion.div>
+
             <motion.div
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
@@ -85,7 +107,7 @@ export function Header () {
             >
               <Link
                 to='/cart'
-                className='p-2 rounded-full bg-amber-700/30 hover:bg-amber-700/50 transition-colors flex items-center justify-center'
+                className='p-2 rounded-full bg-amber-700/30 hover:bg-amber-700/50 transition-colors flex items-center justify-center relative'
               >
                 <FaShoppingCart className='text-xl text-amber-100' />
                 {cartCount > 0 && (
@@ -100,24 +122,23 @@ export function Header () {
               </Link>
             </motion.div>
 
-            {/* Mobile menu button */}
             <motion.button
               whileTap={{ scale: 0.9 }}
               className='md:hidden text-xl z-50 p-2 rounded-full bg-amber-700/30 hover:bg-amber-700/50 text-amber-100 transition-colors'
               onClick={() => setIsOpen(!isOpen)}
+              aria-label='Menu'
             >
               {isOpen ? <FaTimes /> : <FaBars />}
             </motion.button>
           </div>
 
-          {/* Mobile Menu */}
           <AnimatePresence>
             {isOpen && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: 0.3 }}
                 className='md:hidden fixed inset-0 bg-amber-900/90 backdrop-blur-sm z-40 pt-24 px-4'
                 onClick={() => setIsOpen(false)}
               >
@@ -125,48 +146,61 @@ export function Header () {
                   initial={{ y: -50, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -50, opacity: 0 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 300,
+                    damping: 25,
+                    duration: 0.3
+                  }}
                   className='bg-gradient-to-b from-amber-800 to-amber-900 rounded-xl shadow-2xl overflow-hidden max-w-sm mx-auto border border-amber-700/50'
                   onClick={e => e.stopPropagation()}
                 >
-                  {navLinks.map((link, index) => (
+                  <motion.div
+                    variants={menuVariants}
+                    initial='hidden'
+                    animate='visible'
+                    className='divide-y divide-amber-700/30'
+                  >
+                    {navLinks.map((link, index) => (
+                      <motion.div
+                        key={link.name}
+                        variants={itemVariants}
+                        transition={{ type: 'spring', stiffness: 300 }}
+                      >
+                        <Link
+                          to={link.path}
+                          className='flex items-center px-6 py-4 text-lg text-amber-100 hover:bg-amber-700/30 transition-colors'
+                          onClick={() => setIsOpen(false)}
+                        >
+                          {link.icon}
+                          <span>{link.name}</span>
+                        </Link>
+                      </motion.div>
+                    ))}
                     <motion.div
-                      key={link.name}
-                      initial={{ x: -20, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.1 * index }}
+                      variants={itemVariants}
+                      className='px-6 py-4 bg-amber-700/20'
+                    ></motion.div>
+                    <motion.div
+                      variants={itemVariants}
+                      className='px-6 py-4 bg-amber-700/20'
                     >
                       <Link
-                        to={link.path}
-                        className='flex items-center px-6 py-4 text-lg text-amber-100 hover:bg-amber-700/30 transition-colors border-b border-amber-700/30 last:border-b-0'
+                        to='/cart'
+                        className='flex items-center justify-between text-lg font-medium text-amber-50'
                         onClick={() => setIsOpen(false)}
                       >
-                        {link.icon}
-                        <span>{link.name}</span>
+                        <div className='flex items-center'>
+                          <FaShoppingCart className='mr-3 text-amber-200' />
+                          <span>Кошик</span>
+                        </div>
+                        {cartCount > 0 && (
+                          <span className='bg-amber-400 text-amber-900 text-sm font-bold rounded-full px-2.5 py-1 shadow-sm'>
+                            {cartCount}
+                          </span>
+                        )}
                       </Link>
                     </motion.div>
-                  ))}
-                  <motion.div
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.1 * navLinks.length }}
-                    className='px-6 py-4 border-t border-amber-700/30 bg-amber-700/20'
-                  >
-                    <Link
-                      to='/cart'
-                      className='flex items-center justify-between text-lg font-medium text-amber-50'
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <div className='flex items-center'>
-                        <FaShoppingCart className='mr-3 text-amber-200' />
-                        <span>Кошик</span>
-                      </div>
-                      {cartCount > 0 && (
-                        <span className='bg-amber-400 text-amber-900 text-sm font-bold rounded-full px-2.5 py-1 shadow-sm'>
-                          {cartCount}
-                        </span>
-                      )}
-                    </Link>
                   </motion.div>
                 </motion.div>
               </motion.div>

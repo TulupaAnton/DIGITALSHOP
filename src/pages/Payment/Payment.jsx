@@ -2,13 +2,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
-import { useCart } from '../CartContext/CartContext'
 import { motion } from 'framer-motion'
 import zaglushka from '../../assets/zaglushka.png'
+import { useCartStore } from '../../store/cartStore'
 
 export function Payment () {
-  const { cartItems, totalPrice, cartCount, clearCart } = useCart()
-
+  const { cartItems, clearCart } = useCartStore()
+  const totalPrice = useCartStore(state => state.totalPrice())
+  const cartCount = useCartStore(state => state.cartCount())
   const handlePaymentSubmit = e => {
     e.preventDefault()
     // Здесь можно добавить логику обработки платежа
