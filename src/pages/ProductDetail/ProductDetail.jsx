@@ -10,6 +10,8 @@ const categoryNames = {
   salads: 'Салаты',
   'semi-finished': 'Полуфабрикаты'
 }
+import zaglushka from '../../assets/zaglushka.png'
+
 import { useCartStore } from '../../store/cartStore'
 export function ProductDetail () {
   const { category, id } = useParams()
@@ -55,11 +57,13 @@ export function ProductDetail () {
           <div className='md:flex'>
             <div className='md:w-1/2'>
               <img
-                src={`/images/${category}/${id}.jpg`}
+                src={
+                  product.image ? `../../assets/${product.image}` : zaglushka
+                }
                 alt={product.name}
-                className='w-full h-full object-cover'
+                className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105'
                 onError={e => {
-                  e.target.src = '/images/placeholder.jpg'
+                  e.target.src = zaglushka
                 }}
               />
             </div>

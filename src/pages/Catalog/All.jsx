@@ -65,7 +65,7 @@ export function All () {
       offset: 20
     })
   }, [])
-
+  const images = import.meta.glob('../../assets/*.png', { eager: true })
   const allProducts = Object.entries(productsData).flatMap(
     ([category, products]) =>
       products.map(product => ({
@@ -215,12 +215,17 @@ export function All () {
                   <img
                     src={
                       product.image
-                        ? `../../assets/${product.image}`
+                        ? new URL(
+                            `../../assets/${product.image}`,
+                            import.meta.url
+                          ).href
                         : zaglushka
                     }
                     alt={product.name}
-                    className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'
-                    loading='lazy'
+                    className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105'
+                    onError={e => {
+                      e.target.src = zaglushka
+                    }}
                   />
                   <div className='absolute bottom-2 left-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-0.5 rounded text-xs font-medium shadow-md z-20'>
                     {product.categoryName}
