@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import logo from '../../assets/logo2.png'
 import zaglushka from '../../assets/zaglushka.png'
+
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { motion } from 'framer-motion'
@@ -8,31 +10,35 @@ import { motion } from 'framer-motion'
 const categories = [
   {
     id: 'pickles',
-    name: 'Соленья',
-    description: 'Традиционные русские соленья и маринады',
+    name: 'Соління',
+    description: 'Традиційні домашні соління та маринади',
     image: zaglushka,
-    catalogLink: '/catalog/pickles'
+    catalogLink: '/ComingSoon',
+    comingSoon: true
   },
   {
     id: 'smoked',
-    name: 'Копчености',
-    description: 'Мясные и рыбные копчености холодного копчения',
+    name: 'Копченості',
+    description: 'Мʼясні та рибні копченості гарячого та холодного копчення',
     image: zaglushka,
-    catalogLink: '/catalog/smoked'
+    catalogLink: '/ComingSoon',
+    comingSoon: true
   },
   {
     id: 'salads',
-    name: 'Салаты',
-    description: 'Готовые салаты по традиционным рецептам',
+    name: 'Салати',
+    description: 'Готові салати за традиційними рецептами',
     image: zaglushka,
-    catalogLink: '/catalog/salads'
+    catalogLink: '/ComingSoon',
+    comingSoon: true
   },
   {
     id: 'semi-finished',
-    name: 'Полуфабрикаты',
-    description: 'Домашние пельмени, вареники и другие полуфабрикаты',
+    name: 'Напівфабрикати',
+    description: 'Домашні пельмені, вареники та інші напівфабрикати',
     image: zaglushka,
-    catalogLink: '/catalog/semi-finished'
+    catalogLink: '/catalog/semi-finished',
+    comingSoon: false
   }
 ]
 
@@ -49,13 +55,13 @@ export function Product () {
   return (
     <div
       className='min-h-[35rem] bg-cover bg-center bg-no-repeat bg-fixed relative py-20 overflow-hidden'
-      style={{ backgroundImage: `url(${zaglushka})` }}
+      style={{ backgroundImage: `url(${logo})` }}
     >
-      {/* Параллакс-эффект и наложения */}
+      {/* Ефект паралаксу та накладання */}
       <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-black/30'></div>
       <div className='absolute inset-0 bg-noise opacity-10'></div>
 
-      {/* Декоративные элементы */}
+      {/* Декоративні елементи */}
       <div className='absolute top-1/4 left-10 w-32 h-32 bg-amber-400 rounded-full mix-blend-overlay opacity-20 filter blur-xl'></div>
       <div className='absolute bottom-1/3 right-20 w-40 h-40 bg-amber-500 rounded-full mix-blend-overlay opacity-15 filter blur-xl'></div>
 
@@ -69,7 +75,7 @@ export function Product () {
         >
           <h2 className='text-4xl md:text-5xl font-bold text-white mb-6'>
             <span className='bg-clip-text text-transparent bg-gradient-to-r from-amber-300 to-amber-100 drop-shadow-lg'>
-              Наши категории
+              Наші категорії
             </span>
           </h2>
           <div className='w-24 h-1 bg-amber-400 mx-auto rounded-full'></div>
@@ -87,12 +93,21 @@ export function Product () {
               data-aos='zoom-in'
               data-aos-delay={200 + i * 100}
             >
-              <div className='bg-white/90 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 h-full flex flex-col border border-white/20'>
+              <div className='bg-white/90 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 h-full flex flex-col border border-white/20 relative'>
+                {/* Стрічка "Скоро" */}
+                {category.comingSoon && (
+                  <div className='absolute top-2 left-2 bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded shadow-md z-20'>
+                    Скоро
+                  </div>
+                )}
+
                 <div className='relative overflow-hidden h-48'>
                   <motion.img
                     src={category.image}
                     alt={category.name}
-                    className='w-full h-full object-cover'
+                    className={`w-full h-full object-cover transition-opacity duration-300 ${
+                      category.comingSoon ? 'opacity-60 grayscale' : ''
+                    }`}
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.5 }}
                   />
@@ -107,16 +122,22 @@ export function Product () {
                     {category.description}
                   </p>
                   <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: category.comingSoon ? 1 : 1.05 }}
+                    whileTap={{ scale: category.comingSoon ? 1 : 0.95 }}
                     className='mt-auto'
                   >
-                    <Link
-                      to={category.catalogLink}
-                      className='block w-full max-w-xs mx-auto text-center bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white py-3 px-6 rounded-full transition-all duration-300 shadow-md hover:shadow-lg'
-                    >
-                      В каталог
-                    </Link>
+                    {category.comingSoon ? (
+                      <span className='block w-full max-w-xs mx-auto text-center bg-gray-300 text-gray-600 py-3 px-6 rounded-full transition-all duration-300 shadow-inner cursor-not-allowed'>
+                        У розробці
+                      </span>
+                    ) : (
+                      <Link
+                        to={category.catalogLink}
+                        className='block w-full max-w-xs mx-auto text-center bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white py-3 px-6 rounded-full transition-all duration-300 shadow-md hover:shadow-lg'
+                      >
+                        До каталогу
+                      </Link>
+                    )}
                   </motion.div>
                 </div>
               </div>

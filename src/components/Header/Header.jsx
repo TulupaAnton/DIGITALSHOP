@@ -12,6 +12,7 @@ import {
   FaHeart
 } from 'react-icons/fa'
 import { useCartStore } from '../../store/cartStore'
+import logo from '../../assets/logo1.png'
 
 export function Header () {
   const [isOpen, setIsOpen] = useState(false)
@@ -19,7 +20,6 @@ export function Header () {
 
   const navLinks = [
     { name: 'Головна', path: '/', icon: <FaHome className='mr-2' /> },
-    { name: 'Каталог', path: '/All', icon: <FaBoxes className='mr-2' /> },
     {
       name: 'Про нас',
       path: '/about',
@@ -61,12 +61,33 @@ export function Header () {
                 whileTap={{ scale: 0.95 }}
                 className='text-2xl font-bold text-white flex items-center'
               >
-                <span className='bg-amber-600 p-2 rounded-lg mr-3 shadow-md'>
-                  <FaShoppingCart className='text-amber-100' />
-                </span>
-                <span className='bg-gradient-to-r from-amber-300 to-amber-100 bg-clip-text text-transparent'>
-                  DeliMarket
-                </span>
+                <motion.span
+                  whileHover={{ rotate: 5, scale: 1.1 }}
+                  className='bg-gradient-to-br from-amber-500 to-amber-700 p-2 rounded-lg mr-3 shadow-lg flex items-center justify-center'
+                  style={{
+                    boxShadow:
+                      '0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1)'
+                  }}
+                >
+                  <img
+                    src={logo}
+                    alt='Royal Brine Logo'
+                    className='w-8 h-8 object-contain filter drop-shadow-md'
+                    style={{
+                      filter: 'drop-shadow(0 2px 1px rgba(0, 0, 0, 0.2))'
+                    }}
+                  />
+                </motion.span>
+                <motion.span
+                  className='bg-gradient-to-r from-amber-300 via-amber-200 to-amber-100 bg-clip-text text-transparent'
+                  style={{
+                    textShadow: '0 2px 4px rgba(180, 83, 9, 0.3)',
+                    fontSize: '1.5rem',
+                    lineHeight: '2rem'
+                  }}
+                >
+                  Royal Brine
+                </motion.span>
               </motion.span>
             </Link>
 
@@ -134,25 +155,24 @@ export function Header () {
 
           <AnimatePresence>
             {isOpen && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className='md:hidden fixed inset-0 bg-amber-900/90 backdrop-blur-sm z-40 pt-24 px-4'
-                onClick={() => setIsOpen(false)}
-              >
+              <>
+                {/* Overlay with blur effect */}
                 <motion.div
-                  initial={{ y: -50, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -50, opacity: 0 }}
-                  transition={{
-                    type: 'spring',
-                    stiffness: 300,
-                    damping: 25,
-                    duration: 0.3
-                  }}
-                  className='bg-gradient-to-b from-amber-800 to-amber-900 rounded-xl shadow-2xl overflow-hidden max-w-sm mx-auto border border-amber-700/50'
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className='fixed inset-0 bg-black/30 backdrop-blur-lg z-30'
+                  onClick={() => setIsOpen(false)}
+                />
+
+                {/* Mobile menu */}
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className='fixed top-20 right-4 left-4 z-40 bg-gradient-to-b from-amber-800 to-amber-900 rounded-xl shadow-2xl overflow-hidden border border-amber-700/50'
                   onClick={e => e.stopPropagation()}
                 >
                   <motion.div
@@ -180,10 +200,6 @@ export function Header () {
                     <motion.div
                       variants={itemVariants}
                       className='px-6 py-4 bg-amber-700/20'
-                    ></motion.div>
-                    <motion.div
-                      variants={itemVariants}
-                      className='px-6 py-4 bg-amber-700/20'
                     >
                       <Link
                         to='/cart'
@@ -203,7 +219,7 @@ export function Header () {
                     </motion.div>
                   </motion.div>
                 </motion.div>
-              </motion.div>
+              </>
             )}
           </AnimatePresence>
         </div>

@@ -12,8 +12,7 @@ export function Payment () {
   const cartCount = useCartStore(state => state.cartCount())
   const handlePaymentSubmit = e => {
     e.preventDefault()
-    // Здесь можно добавить логику обработки платежа
-    alert('Оплата прошла успешно! Спасибо за покупку!')
+    alert('Оплата пройшла успішно! Дякуємо за покупку!')
     clearCart()
   }
 
@@ -26,7 +25,7 @@ export function Payment () {
             className='inline-flex items-center text-amber-600 hover:underline mb-8'
           >
             <FontAwesomeIcon icon={faArrowLeft} className='mr-2' />
-            Вернуться в корзину
+            Повернутися до кошика
           </Link>
 
           <motion.div
@@ -36,13 +35,13 @@ export function Payment () {
             className='mb-8'
           >
             <h1 className='text-3xl font-bold text-gray-800 mb-2'>
-              Оформление заказа
+              Оформлення замовлення
             </h1>
             <div className='w-20 h-1 bg-amber-500 rounded-full'></div>
           </motion.div>
 
           <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
-            {/* Информация о заказе */}
+            {/* Інформація про замовлення */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -51,7 +50,7 @@ export function Payment () {
             >
               <div className='p-6 bg-amber-50 border-b border-amber-100'>
                 <h2 className='text-xl font-semibold text-gray-800'>
-                  Ваш заказ ({cartCount})
+                  Ваше замовлення ({cartCount})
                 </h2>
               </div>
 
@@ -69,11 +68,14 @@ export function Payment () {
                         <img
                           src={
                             item.image
-                              ? `../../assets/${item.image}`
+                              ? new URL(
+                                  `../../assets/products/${item.image}`,
+                                  import.meta.url
+                                ).href
                               : zaglushka
                           }
                           alt={item.name}
-                          className='w-full h-full object-cover rounded-lg'
+                          className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105'
                           onError={e => {
                             e.target.src = zaglushka
                           }}
@@ -103,18 +105,18 @@ export function Payment () {
               <div className='p-6 bg-gray-50 border-t border-gray-200'>
                 <div className='space-y-3 mb-4'>
                   <div className='flex justify-between'>
-                    <span className='text-gray-600'>Промежуточный итог:</span>
+                    <span className='text-gray-600'>Проміжний підсумок:</span>
                     <span className='font-medium'>
                       {totalPrice.toFixed(2)} грн
                     </span>
                   </div>
                   <div className='flex justify-between'>
                     <span className='text-gray-600'>Доставка:</span>
-                    <span className='font-medium'>Бесплатно</span>
+                    <span className='font-medium'>Безкоштовно</span>
                   </div>
                 </div>
                 <div className='flex justify-between items-center pt-4 border-t border-gray-200'>
-                  <span className='text-lg font-semibold'>Итого:</span>
+                  <span className='text-lg font-semibold'>Разом:</span>
                   <span className='text-xl font-bold text-amber-600'>
                     {totalPrice.toFixed(2)} грн
                   </span>
@@ -122,7 +124,7 @@ export function Payment () {
               </div>
             </motion.div>
 
-            {/* Форма оплаты */}
+            {/* Форма оплати */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -131,7 +133,7 @@ export function Payment () {
             >
               <div className='p-6 bg-amber-50 border-b border-amber-100'>
                 <h2 className='text-xl font-semibold text-gray-800'>
-                  Данные для оплаты
+                  Дані для оплати
                 </h2>
               </div>
 
@@ -143,7 +145,7 @@ export function Payment () {
                     transition={{ delay: 0.6 }}
                   >
                     <label className='block text-gray-700 mb-2'>
-                      Имя и фамилия
+                      Ім’я та прізвище
                     </label>
                     <input
                       type='text'
@@ -158,7 +160,7 @@ export function Payment () {
                     transition={{ delay: 0.7 }}
                   >
                     <label className='block text-gray-700 mb-2'>
-                      Номер телефона
+                      Номер телефону
                     </label>
                     <input
                       type='tel'
@@ -186,7 +188,7 @@ export function Payment () {
                     transition={{ delay: 0.9 }}
                   >
                     <label className='block text-gray-700 mb-2'>
-                      Адрес доставки
+                      Адреса доставки
                     </label>
                     <textarea
                       rows='3'
@@ -202,7 +204,7 @@ export function Payment () {
                     className='border-t border-gray-200 pt-4'
                   >
                     <h3 className='text-lg font-medium text-gray-800 mb-4'>
-                      Способ оплаты
+                      Спосіб оплати
                     </h3>
                     <div className='space-y-3'>
                       <label className='flex items-center space-x-3 cursor-pointer'>
@@ -212,7 +214,7 @@ export function Payment () {
                           defaultChecked
                           className='h-5 w-5 text-amber-500 focus:ring-amber-300 border-gray-300'
                         />
-                        <span>Оплата при получении</span>
+                        <span>Оплата при отриманні</span>
                       </label>
                       <label className='flex items-center space-x-3 cursor-pointer'>
                         <input
@@ -220,7 +222,7 @@ export function Payment () {
                           name='payment'
                           className='h-5 w-5 text-amber-500 focus:ring-amber-300 border-gray-300'
                         />
-                        <span>Онлайн оплата картой</span>
+                        <span>Онлайн оплата карткою</span>
                       </label>
                     </div>
                   </motion.div>
@@ -234,11 +236,9 @@ export function Payment () {
                     <button
                       type='submit'
                       className='w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium rounded-lg transition-all duration-300 flex items-center justify-center space-x-2'
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
                     >
                       <FontAwesomeIcon icon={faCheckCircle} />
-                      <span>Подтвердить заказ</span>
+                      <span>Підтвердити замовлення</span>
                     </button>
                   </motion.div>
                 </div>
@@ -253,13 +253,13 @@ export function Payment () {
             className='mt-8 bg-amber-50 border border-amber-100 rounded-lg p-4'
           >
             <p className='text-gray-700 text-center'>
-              Нажимая "Подтвердить заказ", вы соглашаетесь с нашими{' '}
+              Натискаючи "Підтвердити замовлення", ви погоджуєтесь з нашими{' '}
               <Link to='/terms' className='text-amber-600 hover:underline'>
-                условиями использования
+                умовами використання
               </Link>{' '}
-              и{' '}
+              та{' '}
               <Link to='/privacy' className='text-amber-600 hover:underline'>
-                политикой конфиденциальности
+                політикою конфіденційності
               </Link>
               .
             </p>

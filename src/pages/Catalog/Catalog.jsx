@@ -14,10 +14,10 @@ import zaglushka from '../../assets/zaglushka.png'
 import { useCartStore } from '../../store/cartStore'
 
 const categoryNames = {
-  pickles: 'Соленья',
-  smoked: 'Копчености',
-  salads: 'Салаты',
-  'semi-finished': 'Полуфабрикаты'
+  pickles: 'Соління',
+  smoked: 'Копчення',
+  salads: 'Салати',
+  'semi-finished': 'Напівфабрикати'
 }
 const truncateDescription = (text, maxLength = 80) => {
   if (text.length <= maxLength) return text
@@ -118,14 +118,16 @@ export function Catalog () {
               data-aos-delay='150'
             >
               <Link
-                to='/All'
+                // to='/All'
+                to='/'
                 className='group inline-flex items-center px-5 py-3 bg-white border border-amber-300 rounded-xl text-amber-600 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-400 transition-all duration-200 shadow-sm hover:shadow-md'
               >
                 <FontAwesomeIcon
                   icon={faArrowRight}
                   className='mr-2 transform -rotate-180 transition-transform duration-200 group-hover:translate-x-1'
                 />
-                Повернутись до каталогу
+                {/* Повернутись до каталогу */}
+                Повернутись на головну
               </Link>
             </div>
           </div>
@@ -145,7 +147,10 @@ export function Catalog () {
                   <img
                     src={
                       product.image
-                        ? `../../assets/${product.image}`
+                        ? new URL(
+                            `../../assets/products/${product.image}`,
+                            import.meta.url
+                          ).href
                         : zaglushka
                     }
                     alt={product.name}
@@ -190,7 +195,7 @@ export function Catalog () {
                         onClick={() => handleAddToCart(product)}
                         className='px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl text-sm transition-all duration-200 shadow-md hover:shadow-lg'
                       >
-                        В корзину
+                        У кошик
                       </button>
                     </div>
                   </div>

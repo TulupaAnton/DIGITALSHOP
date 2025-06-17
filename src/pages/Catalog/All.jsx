@@ -8,8 +8,7 @@ import {
   faArrowRight,
   faTimes,
   faFire,
-  faStar,
-  faSortAmountUp
+  faStar
 } from '@fortawesome/free-solid-svg-icons'
 import zaglushka from '../../assets/zaglushka.png'
 import AOS from 'aos'
@@ -22,10 +21,9 @@ const categoryNames = {
   salads: 'Салаты',
   'semi-finished': 'Полуфабрикаты'
 }
+
 const truncateDescription = (text, maxLength = 80) => {
   if (text.length <= maxLength) return text
-
-  // Обрезаем до maxLength и ищем последнюю точку/запятую/пробел
   let truncated = text.substr(0, maxLength)
   const lastPunctuation = Math.max(
     truncated.lastIndexOf('. '),
@@ -33,13 +31,12 @@ const truncateDescription = (text, maxLength = 80) => {
     truncated.lastIndexOf('; '),
     truncated.lastIndexOf(' ')
   )
-
   if (lastPunctuation > 0) {
     truncated = truncated.substr(0, lastPunctuation)
   }
-
   return truncated + '...'
 }
+
 const categoryFilters = [
   { id: 'all', name: 'Все товары' },
   { id: 'pickles', name: 'Соленья' },
@@ -52,9 +49,7 @@ export function All () {
   const { category } = useParams()
   const [searchTerm, setSearchTerm] = React.useState('')
   const [sortBy, setSortBy] = React.useState(null)
-  const [isSortOpen, setIsSortOpen] = React.useState(false)
   const { addToCart } = useCartStore()
-
   const navigate = useNavigate()
 
   React.useEffect(() => {
@@ -65,6 +60,7 @@ export function All () {
       offset: 20
     })
   }, [])
+
   const images = import.meta.glob('../../assets/*.png', { eager: true })
   const allProducts = Object.entries(productsData).flatMap(
     ([category, products]) =>
@@ -83,13 +79,6 @@ export function All () {
       .includes(searchTerm.toLowerCase())
     return matchesCategory && matchesSearch
   })
-
-  if (sortBy) {
-    switch (sortBy) {
-      default:
-        break
-    }
-  }
 
   const handleAddToCart = product => {
     addToCart(product, product.category)
@@ -117,9 +106,8 @@ export function All () {
   }
 
   return (
-    <div className='py-6 md:py-12 bg-gradient-to-b from-amber-50 to-white min-h-screen'>
-      <div className='container mx-auto px-4'>
-        {/* Заголовок и поиск - мобильная версия */}
+    <div className='w-full overflow-x-hidden bg-gradient-to-b from-amber-50 to-white min-h-screen'>
+      <div className='max-w-[1280px] mx-auto px-4'>
         <div className='flex flex-col md:flex-row justify-between items-center mb-6 gap-4'>
           <div className='mb-4 md:mb-0 w-full' data-aos='fade-right'>
             <h1 className='text-2xl md:text-4xl font-bold text-gray-900 bg-gradient-to-r from-amber-500 to-orange-600 bg-clip-text text-transparent'>
@@ -132,43 +120,31 @@ export function All () {
             </p>
           </div>
 
-          {/* Поиск и сортировка - мобильная версия */}
           <div className='flex flex-col w-full md:w-auto gap-3'>
             <div className='relative w-full' data-aos='fade-left'>
-              <div className='relative'>
-                <FontAwesomeIcon
-                  icon={faSearch}
-                  className='absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-500 text-sm'
-                />
-                <input
-                  type='text'
-                  placeholder='Поиск...'
-                  value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
-                  className='w-full pl-10 pr-8 py-2 md:py-3 rounded-xl md:rounded-2xl bg-white border border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent shadow-sm transition-all duration-200 text-sm md:text-base'
-                />
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm('')}
-                    className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-amber-600 transition-colors'
-                  >
-                    <FontAwesomeIcon icon={faTimes} className='text-xs' />
-                  </button>
-                )}
-              </div>
-            </div>
-
-            <div className='flex gap-3'>
-              <div
-                className='relative flex-1'
-                data-aos='fade-left'
-                data-aos-delay='100'
-              ></div>
+              <FontAwesomeIcon
+                icon={faSearch}
+                className='absolute left-3 top-1/2 transform -translate-y-1/2 text-amber-500 text-sm'
+              />
+              <input
+                type='text'
+                placeholder='Поиск...'
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+                className='w-full pl-10 pr-8 py-2 md:py-3 rounded-xl md:rounded-2xl bg-white border border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent shadow-sm transition-all duration-200 text-sm md:text-base'
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-amber-600 transition-colors'
+                >
+                  <FontAwesomeIcon icon={faTimes} className='text-xs' />
+                </button>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Фильтры категорий - мобильная версия */}
         <div className='mb-6 overflow-x-auto pb-2' data-aos='fade-up'>
           <div className='flex gap-2 w-max'>
             {categoryFilters.map(filter => (
@@ -216,7 +192,7 @@ export function All () {
                     src={
                       product.image
                         ? new URL(
-                            `../../assets/${product.image}`,
+                            `../../assets/products/${product.image}`,
                             import.meta.url
                           ).href
                         : zaglushka

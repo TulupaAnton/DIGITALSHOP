@@ -16,12 +16,10 @@ export function CartPage () {
   const totalPrice = useCartStore(state => state.totalPrice())
   const cartCount = useCartStore(state => state.cartCount())
   const handleCheckout = () => {
-    // Здесь можно добавить логику оформления заказа
-    alert('Заказ оформлен! Спасибо за покупку!')
+    alert('Замовлення оформлено! Дякуємо за покупку!')
     clearCart()
   }
 
-  // Анимации
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -53,15 +51,15 @@ export function CartPage () {
                 className='text-white text-xl'
               />
             </div>
-            <h1 className='text-3xl font-bold text-gray-800'>Ваша корзина</h1>
+            <h1 className='text-3xl font-bold text-gray-800'>Ваш кошик</h1>
             {cartCount > 0 && (
               <span className='ml-3 bg-amber-500 text-white text-sm font-bold px-3 py-1 rounded-full'>
                 {cartCount}{' '}
                 {cartCount === 1
                   ? 'товар'
                   : cartCount < 5
-                  ? 'товара'
-                  : 'товаров'}
+                  ? 'товари'
+                  : 'товарів'}
               </span>
             )}
           </div>
@@ -80,16 +78,18 @@ export function CartPage () {
                 />
               </div>
               <h2 className='text-xl font-medium text-gray-700 mb-4'>
-                Ваша корзина пуста
+                Ваш кошик порожній
               </h2>
               <p className='text-gray-500 mb-6 max-w-md mx-auto'>
-                Добавьте товары из нашего каталога, чтобы продолжить покупки
+                Додайте товари з нашого каталогу, щоб продовжити покупки
               </p>
               <Link
-                to='/All'
+                // to='/All'
+                to='/'
                 className='inline-block px-8 py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium rounded-full transition-all shadow-md hover:shadow-lg'
               >
-                Перейти в каталог
+                {/* Перейти до каталогу */}
+                Перейти на головну
               </Link>
             </motion.div>
           ) : (
@@ -109,20 +109,20 @@ export function CartPage () {
                     <div className='flex-shrink-0 mb-4 md:mb-0 md:mr-6 w-24 h-24 relative'>
                       <motion.img
                         src={
-                          item.image ? `../../assets/${item.image}` : zaglushka
+                          item.image
+                            ? new URL(
+                                `../../assets/products/${item.image}`,
+                                import.meta.url
+                              ).href
+                            : zaglushka
                         }
                         alt={item.name}
-                        className='w-full h-full object-cover rounded-lg shadow-sm'
+                        className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105'
                         onError={e => {
                           e.target.src = zaglushka
                         }}
-                        whileHover={{ scale: 1.05 }}
-                        transition={{
-                          type: 'spring',
-                          stiffness: 400,
-                          damping: 10
-                        }}
                       />
+
                       <motion.button
                         onClick={() => removeFromCart(item.id, item.category)}
                         className='absolute -top-2 -right-2 bg-white rounded-full p-2 shadow-md hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors'
@@ -192,7 +192,7 @@ export function CartPage () {
               <div className='p-6 bg-gradient-to-r from-amber-50 to-amber-100'>
                 <div className='flex justify-between items-center mb-6'>
                   <span className='text-lg font-semibold text-gray-800'>
-                    Итого:
+                    Разом:
                   </span>
                   <span className='text-2xl font-bold text-amber-600'>
                     {totalPrice.toFixed(2)} грн
@@ -206,7 +206,7 @@ export function CartPage () {
                     whileTap={{ scale: 0.98 }}
                   >
                     <FontAwesomeIcon icon={faTrash} />
-                    <span>Очистить корзину</span>
+                    <span>Очистити кошик</span>
                   </motion.button>
                   <motion.div
                     whileHover={{ scale: 1.02 }}
@@ -216,7 +216,7 @@ export function CartPage () {
                       to='/payment'
                       className='block w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-medium rounded-lg transition-all text-center shadow-md hover:shadow-lg'
                     >
-                      Оформить заказ
+                      Оформити замовлення
                     </Link>
                   </motion.div>
                 </div>

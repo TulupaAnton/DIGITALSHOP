@@ -24,14 +24,14 @@ export function ProductDetail () {
       <div className='min-h-screen flex items-center justify-center'>
         <div className='text-center'>
           <h2 className='text-2xl font-bold text-gray-800 mb-4'>
-            Товар не найден
+            Товар не знайдено
           </h2>
           <Link
             to='/'
             className='inline-flex items-center text-amber-600 hover:underline'
           >
             <FontAwesomeIcon icon={faArrowLeft} className='mr-2' />
-            Вернуться на главную
+            Повернутись на головну
           </Link>
         </div>
       </div>
@@ -58,7 +58,12 @@ export function ProductDetail () {
             <div className='md:w-1/2'>
               <img
                 src={
-                  product.image ? `../../assets/${product.image}` : zaglushka
+                  product.image
+                    ? new URL(
+                        `../../assets/products/${product.image}`,
+                        import.meta.url
+                      ).href
+                    : zaglushka
                 }
                 alt={product.name}
                 className='w-full h-full object-cover transition-transform duration-500 group-hover:scale-105'
@@ -86,7 +91,7 @@ export function ProductDetail () {
                 className='flex items-center justify-center px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-full font-medium transition-colors w-full'
               >
                 <FontAwesomeIcon icon={faShoppingCart} className='mr-2' />
-                Добавить в корзину
+                Добавити у кошик
               </button>
             </div>
           </div>

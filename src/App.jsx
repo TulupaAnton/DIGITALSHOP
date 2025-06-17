@@ -9,6 +9,7 @@ import { CartPage } from './pages/CartPage/CartPage'
 import { Catalog } from './pages/Catalog/Catalog'
 import { Payment } from './pages/Payment/Payment'
 import { All } from './pages/Catalog/All'
+import ComingSoon from './pages/ComingSoon/ComingSoon'
 
 function App () {
   return (
@@ -24,6 +25,7 @@ function App () {
         <Route path='/product/:category/:id' element={<ProductDetail />} />
         <Route path='/cart' element={<CartPage />} />
         <Route path='/payment' element={<Payment />} />
+        <Route path='/ComingSoon' element={<ComingSoon />} />
       </Routes>
     </>
   )
